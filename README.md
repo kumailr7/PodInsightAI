@@ -76,7 +76,7 @@ The Bash script (pods_health_checker.sh) is used to scan pods, check their statu
 
 ## Example Output
 
-### Cluster List and Swtich
+### Cluster List and Switch
 ```
 Available Kubernetes clusters:
 kind-hack
