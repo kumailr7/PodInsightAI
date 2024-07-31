@@ -116,6 +116,10 @@ Possible solution for CrashLoopBackOff:
 - Ensure dependencies and volumes are properly mounted.
 ```
 
+### Example Screenshot
+
+![alt text](<Screenshot from 2024-07-31 20-19-09.png>)
+
 ## Contributing
 
 Feel free to fork the repository and submit pull requests. Contributions to improve functionality and add features are welcome.
@@ -123,3 +127,4 @@ Feel free to fork the repository and submit pull requests. Contributions to impr
 ## License
 
 This project is licensed under the MIT License.
+
