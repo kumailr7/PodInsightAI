@@ -80,9 +80,7 @@ The Bash script (pods_health_checker.sh) is used to scan pods, check their statu
 ```
 Available Kubernetes clusters:
 kind-hack
-kind-kind-hack
 minikube
-api-sandbox-m4-g2pi-p1-openshiftapps-com:6443
 k3d-dragon-1
 
 
