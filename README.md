@@ -53,6 +53,7 @@ Example Command
 ```python
 python get_gemini_solution.py "CrashLoopBackOff"
 ```
+🔔 **Note:** This Python Script is in the Shell Script so we dont need to run it as standalone
 
 
 ### Bash Script
