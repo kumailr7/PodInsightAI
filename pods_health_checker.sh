@@ -1,5 +1,7 @@
 #!/bin/bash
 
+clear
+
 # Colors
 blanc="\033[1;37m"
 gray="\033[0;37m"
@@ -10,10 +12,16 @@ amarillo="\033[1;33m"
 azul="\033[1;34m"
 rescolor="\e[0m"
 
-# Header
-echo -e "${green}####################################${rescolor}"
-echo -e "${green}#${rescolor}        ${green}PODS HEALTH CHECKER${rescolor}        ${green}#${rescolor}"
-echo -e "${green}####################################${rescolor}\n"
+# Banner
+printf "\n%.0s" {1..3}
+echo -e "${green}  .______     ______    _______       _______.    __    __   _______     ___       __      .___________. __    __      ______  __    __   _______   ______  __  ___  _______ .______      ${rescolor}"
+echo -e "${green}  |   _  \\   /  __  \\  |       \\     /       |   |  |  |  | |   ____|   /   \\     |  |     |           ||  |  |  |    /      ||  |  |  | |   ____| /      ||  |/  / |   ____||   _  \\     ${rescolor}"
+echo -e "${green}  |  |_)  | |  |  |  | |  .--.  |   |   (----\`   |  |__|  | |  |__     /  ^  \\    |  |     \`---|  |----\`|  |__|  |   |  ,----'|  |__|  | |  |__   |  ,----'|  '  /  |  |__   |  |_)  |    ${rescolor}"
+echo -e "${green}  |   ___/  |  |  |  | |  |  |  |    \\   \\       |   __   | |   __|   /  /_\\  \\   |  |         |  |     |   __   |   |  |     |   __   | |   __|  |  |     |    <   |   __|  |      /     ${rescolor}"
+echo -e "${green}  |  |      |  \`--'  | |  '--'  |.----)   |      |  |  |  | |  |____ /  _____  \\  |  \`----.    |  |     |  |  |  |   |  \`----.|  |  |  | |  |____ |  \`----.|  .  \\  |  |____ |  |\\  \\----.${rescolor}"
+echo -e "${green}  | _|       \\______/  |_______/ |_______/       |__|  |__| |_______/__/     \\__\\ |_______|    |__|     |__|  |__|    \\______||__|  |__| |_______| \\______||__|\\__\\ |_______|| _| \`.___|${rescolor}"
+printf "\n%.0s" {1..2}
+
 
 # Function to list all namespaces
 list_namespaces() {
@@ -23,15 +31,25 @@ list_namespaces() {
   echo -e "\n"
 }
 
-# Function to get solution from Python script
+# Function to get solution from Python script and save to Markdown file
 get_solutions_from_gemini() {
   local reason=$1
-  solution=$(python3 get_gemini_solution.py "$reason")
+  local output_file="AI_Response.md"
+  
+  # Create or clear the output file
+  : > "$output_file"
+  
+  echo -e "${blanc}Fetching solution for: $reason${rescolor}"
+  solution=$(python3 get_gemini_solution.py "$reason" 2>&1 | awk '!/WARNING: All log messages before absl::InitializeLog() is called are written to STDERR/ && !/gRPC experiments enabled:/')
   
   if [[ -z "$solution" ]]; then
     echo -e "${red}No solution found for the given reason.${rescolor}"
+    echo "## Solution for: $reason" >> "$output_file"
+    echo "No solution found for the given reason." >> "$output_file"
   else
-    echo -e "${blanc}Possible solution:${rescolor}\n$solution"
+    echo -e "${blanc}Possible Solutions:- AI Response is saved as Markdown. Please check $output_file for the solution.${rescolor}"
+    echo "## Solution for: $reason" >> "$output_file"
+    echo "$solution" >> "$output_file"
   fi
 }
 
@@ -81,6 +99,8 @@ check_pods_in_namespace() {
   printf "|%-15s|%-15s|%-15s|\n" "$ok" "$notok" "$pending"
   echo "+---------------+---------------+---------------+"
 
+  # Display issues and sends solutions to AI 
+
   if [ ${#issues[@]} -ne 0 ]; then
     echo -e "\n${red}Issues:${rescolor}\n"
     echo "+------------------------+-----------------------------+"
@@ -114,11 +134,34 @@ check_pods_cluster_wide() {
   done
 }
 
+# Function to check if there are multiple clusters and prompt to switch
+check_and_switch_cluster() {
+  # Count the number of clusters
+  local cluster_count
+  cluster_count=$(kubectl config get-clusters | tail -n +2 | wc -l)
+
+  if (( cluster_count > 1 )); then
+    # Multiple clusters detected, prompt to switch
+    echo -e "${blanc}🌐✨ Multiple clusters detected! Choose the one to switch to and start your scan!${rescolor}"
+    echo -e "${blanc}🔄🌟 Please select the cluster you want to switch to and continue your scan!.${rescolor}"
+    ./switch_cluster.sh
+  else
+    # Only one cluster detected
+    echo -e "${blanc}🔍✅ Only one cluster detected. No need to switch—you're all set!${rescolor}"
+  fi
+}
+
+# Call the function to check and switch cluster if needed
+check_and_switch_cluster
+
+echo " "
+
 # Menu options
+
 echo "Choose an option:"
 echo "1. Scan cluster-wide"
 echo "2. Scan a specific namespace"
-
+echo " "
 read -p 'Option: ' option
 
 case $option in
@@ -127,7 +170,7 @@ case $option in
     ;;
   2)
     list_namespaces
-    read -p 'Enter the namespace you want to choose: ' varname
+    read -p '🏷️✨Enter the namespace you want to choose: ' varname
     if echo "$namespaces" | grep -qw "$varname"; then
       check_pods_in_namespace $varname
     else

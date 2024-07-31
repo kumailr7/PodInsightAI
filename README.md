@@ -10,6 +10,8 @@ The **Pods Health Checker AI** project combines a Bash shell script and a Python
 - **Status Reporting**: Display the status of pods (Running, Pending, and Errors) in a visually appealing table format.
 - **Issue Diagnosis**: Extract and analyze pod issues (e.g., CrashLoopBackOff) and get solutions using Google Gemini.
 - **Namespace Listing**: Automatically list all namespaces within the cluster for easy selection.
+- **Response Storing**: The AI response is stored in `AI_Response.md` file
+- **Clusters Switch**: List down all the clusters and easily switch between them
 
 ## Installation
 
@@ -74,6 +76,20 @@ The Bash script (pods_health_checker.sh) is used to scan pods, check their statu
 
 ## Example Output
 
+### Cluster List and Swtich
+```
+Available Kubernetes clusters:
+kind-hack
+kind-kind-hack
+minikube
+api-sandbox-m4-g2pi-p1-openshiftapps-com:6443
+k3d-dragon-1
+
+
+🔄🗂️ Enter the name of the cluster you want to switch to: minikube
+Switched to context "minikube".
+Switched to cluster: minikube
+```
 
 ### Namespace List 
 
@@ -111,15 +127,17 @@ kube-system
 ### AI based solution 
 
 ```
-Possible solution for CrashLoopBackOff:
-- Check pod logs for errors.
-- Verify container image and configurations.
-- Ensure dependencies and volumes are properly mounted.
+Fetching solution for: CrashLoopBackOff
+Possible Solutions:- AI Response is saved as Markdown. Please check AI_Response.md for the solution.
 ```
+
+### AI Response Storing
+
+check the example AI_Response.md to get a good understanding about the Pod Issue.
 
 ### Example Screenshot
 
-![alt text](<Screenshot from 2024-07-31 20-19-09.png>)
+![alt text](<Screenshot from 2024-08-01 02-01-17.png>)
 
 ## Contributing
 
