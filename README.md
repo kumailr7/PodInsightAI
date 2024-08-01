@@ -12,6 +12,7 @@ The **Pods Health Checker AI** project combines a Bash shell script and a Python
 - **Namespace Listing**: Automatically list all namespaces within the cluster for easy selection.
 - **Response Storing**: The AI response is stored in `AI_Response.md` file
 - **Clusters Switch**: List down all the clusters and easily switch between them
+- **Multiple Error Handing**: if two or more than two errors are there then respective markdown file will be generated
 
 ## Installation
 
@@ -126,12 +127,12 @@ kube-system
 
 ```
 Fetching solution for: CrashLoopBackOff
-Possible Solutions:- AI Response is saved as Markdown. Please check AI_Response.md for the solution.
+Possible Solutions:- AI Response is saved as Markdown. Please check CrashLoopBackOff.md for the solution.
 ```
 
 ### AI Response Storing
 
-check the example AI_Response.md to get a good understanding about the Pod Issue.
+check the example CrashLoopBackOff.md to get a good understanding about the Pod Issue.
 
 ### Example Screenshot
 
