@@ -10,7 +10,7 @@ The **Pods Health Checker AI** project combines a Bash shell script and a Python
 - **Status Reporting**: Display the status of pods (Running, Pending, and Errors) in a visually appealing table format.
 - **Issue Diagnosis**: Extract and analyze pod issues (e.g., CrashLoopBackOff) and get solutions using Google Gemini.
 - **Namespace Listing**: Automatically list all namespaces within the cluster for easy selection.
-- **Response Storing**: The AI response is stored in `AI_Response.md` file
+- **Response Storing**: The AI response is stored in `CrashLoopBackOff.md` file based on issue extracted
 - **Clusters Switch**: List down all the clusters and easily switch between them
 - **Multiple Error Handing**: if two or more than two errors are there then respective markdown file will be generated
 
