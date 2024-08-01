@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-backend
+  labels:
+    app: python-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python-backend
+  template:
+    metadata:
+      labels:
+        app: python-backend
+    spec:
+      containers:
+        - name: backend
+          image: "secure-node:latest"  # Replace with your image
+          ports:
+            - containerPort: 80
+        #   env:                     ##### Add this after the python app is deployed via Helm ####
+        #     - name: DATABASE_URL
+        #       value: "postgres://admin:password@postgresql-service:5432/mydatabase"
+

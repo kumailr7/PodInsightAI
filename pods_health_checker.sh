@@ -31,17 +31,30 @@ list_namespaces() {
   echo -e "\n"
 }
 
+# Function to sanitize the reason string for use in filenames
+sanitize_reason() {
+  local reason=$1
+  # Replace spaces with underscores, and remove any other invalid characters
+  sanitized_reason=$(echo "$reason" | sed 's/ /_/g' | sed 's/[^a-zA-Z0-9_-]//g')
+  echo "$sanitized_reason"
+}
+
 # Function to get solution from Python script and save to Markdown file
 get_solutions_from_gemini() {
   local reason=$1
-  local output_file="AI_Response.md"
-  
-  # Create or clear the output file
-  : > "$output_file"
-  
+  local sanitized_reason=$(sanitize_reason "$reason")
+  local output_file="${sanitized_reason}.md"
+  local counter=1
+
+  # Ensure unique filename by appending a counter if file already exists
+  while [[ -f "$output_file" ]]; do
+    output_file="${sanitized_reason}_${counter}.md"
+    ((counter++))
+  done
+
   echo -e "${blanc}Fetching solution for: $reason${rescolor}"
   solution=$(python3 get_gemini_solution.py "$reason" 2>&1 | awk '!/WARNING: All log messages before absl::InitializeLog() is called are written to STDERR/ && !/gRPC experiments enabled:/')
-  
+
   if [[ -z "$solution" ]]; then
     echo -e "${red}No solution found for the given reason.${rescolor}"
     echo "## Solution for: $reason" >> "$output_file"
